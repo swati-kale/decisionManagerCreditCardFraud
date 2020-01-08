@@ -27,7 +27,7 @@ public class CaseMgmt {
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("Authorization","Basic YWRtaW5Vc2VyOnRlc3QxMjM0IQ==");
-
+             System.out.print("KIE_SERVICEr Connection"+conn);
              PotentialFraudFactCaseFile potentialFraudFactCaseFile = new PotentialFraudFactCaseFile(String.valueOf(potentialFraudFact.getCreditCardNumber()),potentialFraudFact.getTransactions().toString());
             String transactionList = "";
 
@@ -48,10 +48,12 @@ public class CaseMgmt {
             os.flush();
 
 
-
+            System.out.print("KIE_SERVICER Connection ResponseCode"+ conn.getResponseCode());
             if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+            System.out.print("KIE_SERVICER Connection HTTP error code "+ conn.getResponseCode());
                 throw new RuntimeException("Failed : HTTP error code : "
                         + conn.getResponseCode());
+
             }
 
             conn.disconnect();
