@@ -26,7 +26,7 @@ public class CaseMgmt {
             conn.setDoOutput(true);
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Authorization","Basic YWRtaW5Vc2VyOnRlc3QxMjM0IQ==");
+            conn.setRequestProperty("Authorization","Basic YWRtaW5Vc2VyOnJlZGhhdA==");
              System.out.print("KIE_SERVICEr Connection"+conn);
              PotentialFraudFactCaseFile potentialFraudFactCaseFile = new PotentialFraudFactCaseFile(String.valueOf(potentialFraudFact.getCreditCardNumber()),potentialFraudFact.getTransactions().toString());
             String transactionList = "";
