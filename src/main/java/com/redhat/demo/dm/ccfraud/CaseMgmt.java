@@ -20,7 +20,7 @@ public class CaseMgmt {
     public void invokeCase(PotentialFraudFact potentialFraudFact) {
 
         try {
-
+            System.out.println("Start-------------Case Management Invoke---------");
             URL url = new URL("http://rhpam7-fraud-detection-kieserver-http-rhpam7-fraud-detection.apps.mw-ocp4.cloud.lab.eng.bos.redhat.com/services/rest/server/containers/test-case-project_1.0.0/cases/src.fraudWorkflow/instances");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
@@ -57,13 +57,14 @@ public class CaseMgmt {
             }
 
             conn.disconnect();
+            System.out.println("END-------------Case Management Invoke---------");
 
         } catch (MalformedURLException e) {
-
+            System.out.println("MalformedURLException-------------Case Management Invoke---------");
             e.printStackTrace();
 
         } catch (IOException e) {
-
+            System.out.println("IOException-------------Case Management Invoke---------");
             e.printStackTrace();
 
         }

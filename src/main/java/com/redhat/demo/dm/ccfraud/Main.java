@@ -96,6 +96,7 @@ public class Main {
         }
 
         private static void invokeCase(PotentialFraudFact potentialFraudFact) {
+        System.out.print("Business central for invokeCase................");
             vertx.<String>executeBlocking(future -> {
                 try {
                     CaseMgmt caseMgmt = new CaseMgmt();
