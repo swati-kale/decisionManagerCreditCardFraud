@@ -103,7 +103,7 @@ public class Main {
                     caseMgmt.invokeCase(potentialFraudFact);
 
                 }catch(Exception e) {
-                    System.out.print("Business central not yet ready...");
+                    System.out.println("Business central not yet ready...");
                 }
 
             }, res -> {
