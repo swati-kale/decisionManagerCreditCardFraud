@@ -21,8 +21,7 @@ public class CaseMgmt {
 
         try {
 
-            URL url = new URL("http://rhpam7-fraud-detection-kieserver.rhpam7-fraud-detection.svc:8080" +
-                    "/services/rest/server/containers/test-case-project_1.0.0/processes/src.fraudWorkflow/instances");
+            URL url = new URL("https://rhpam7-fraud-detection-kieserver-rhpam7-fraud-detection.apps.mw-ocp4.cloud.lab.eng.bos.redhat.com/services/rest/server/containers/test-case-project_1.0.0/cases/src.fraudWorkflow/instances");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
             conn.setRequestMethod("POST");
