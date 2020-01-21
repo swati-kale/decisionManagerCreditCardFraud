@@ -60,7 +60,7 @@ public class Main {
         config.put(ConsumerConfig.GROUP_ID_CONFIG, "test");
 
 
-        // use consumer for interacting with Apache Kafka
+        // use consumer for interacting with Apache Kafka ---
         KafkaConsumer<String, String> consumer = KafkaConsumer.create(vertx, config);
 
 
