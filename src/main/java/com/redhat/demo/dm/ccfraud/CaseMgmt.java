@@ -38,6 +38,7 @@ public class CaseMgmt {
                     transactionList = "," + transaction.getTransactionNumber();
                 }
             }
+            potentialFraudFactCaseFile.setCaseFile_creditCardNumber(potentialFraudFact.getCreditCardNumber().toString());
 
             potentialFraudFactCaseFile.setCaseFile_transactionList(transactionList);
 
