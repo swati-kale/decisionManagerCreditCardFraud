@@ -41,14 +41,15 @@ public class CaseMgmt {
             potentialFraudFactCaseFile.setCaseFile_creditCardNumber(potentialFraudFact.getCreditCardNumber().toString());
 
             potentialFraudFactCaseFile.setCaseFile_transactionList(transactionList);
+            System.out.println("potentialFraudFactCaseFile"+potentialFraudFactCaseFile.getCaseFile_creditCardNumber());
 
             OutputStream os = conn.getOutputStream();
 
             os.write(new Gson().toJson(potentialFraudFactCaseFile).getBytes());
 
             os.flush();
-
-
+        
+            System.out.println("connnnnnnnnnnn"+conn.getHeaderFields());
             System.out.println("KIE_SERVICER Connection ResponseCode"+ conn.getResponseCode());
             if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
             System.out.println("KIE_SERVICER Connection HTTP error code "+ conn.getResponseCode());
@@ -58,7 +59,7 @@ public class CaseMgmt {
             }
 
             conn.disconnect();
-            System.out.println("END-------------Case Management Invoke---------");
+            System.out.println("END-------------Case Management Invoke---------"); System.out.println("KIE_SERVICER Connection ResponseCode"+ conn.getResponseCode());
 
         } catch (MalformedURLException e) {
             System.out.println("MalformedURLException-------------Case Management Invoke---------");
