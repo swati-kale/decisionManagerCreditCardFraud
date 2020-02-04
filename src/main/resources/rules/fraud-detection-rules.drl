@@ -1,7 +1,7 @@
 package rules;
 
 import com.redhat.demo.dm.ccfraud.domain.CreditCardTransaction;
-import com.redhat.demo.dm.ccfraud.domain.InMemCreditCardTansaction;
+
 import java.util.Collection;
 import java.util.ArrayList;
 
@@ -15,7 +15,7 @@ end
 
 // declaration 
 declare window CCWindow 
-	CreditCardTransaction () over window:time( 60s )
+	CreditCardTransaction () over window:time( 15m )
 end
 // rules
 
@@ -26,8 +26,7 @@ salience 200
 	when
 		$cct: CreditCardTransaction( )
 	then
-	System.out.println("Here  "+ $cct.getTransactionNumber() );
-	System.out.println("TS  "+ $cct.getTimestamp());
+	
 		insert($cct);
 				
 end
@@ -40,15 +39,17 @@ salience 100
 				$list: collectList($cct);
 				$nrOfTransactions > 3)
 	$c1: CreditCardTransaction() from $list
-	$c2: CreditCardTransaction(this != $c1, this after[0s, 10s] $c1) from $list
+	$c2: CreditCardTransaction(this != $c1, this after[0s, 60s] $c1, this.getCreditCardNumber()==$c1.getCreditCardNumber(),this.getTerminal().getId()!=$c1.getTerminal().getId()) from $list
 then
 	System.out.println("\nFound 4 or more cc transactions in last 15 minutes of current transaction = "+$list.size());
 	System.out.println("And within that collection, there are 2 transactions within 10 seconds of each other.\n"+$nrOfTransactions);
-	System.out.println("ccc   "+$c1);
-	System.out.println("kkk   "+$c2);
+	System.out.println("Credit Card1 ::::::::  "+$c1);
+	System.out.println("Credit Card2 ::::::::  "+$c2);
 	PotentialFraudFact potentialFraud = new PotentialFraudFact();
 	potentialFraud.setTransactions(new java.util.ArrayList());
-	
+	potentialFraud.setCreditCardNumber($c1.getCreditCardNumber());
+	potentialFraud.getTransactions().add($c1);
+	potentialFraud.getTransactions().add($c2);
 	insert(potentialFraud);
 end
 
