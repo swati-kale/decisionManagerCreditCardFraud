@@ -10,7 +10,7 @@ import java.math.BigDecimal;
  * @author <a href="mailto:ddoyle@redhat.com">Duncan Doyle</a>
  */
 @org.kie.api.definition.type.Role(org.kie.api.definition.type.Role.Type.EVENT)
-@org.kie.api.definition.type.Expires("2m")
+@org.kie.api.definition.type.Expires("60m")
 public class CreditCardTransaction {
 
 	private long transactionNumber;
