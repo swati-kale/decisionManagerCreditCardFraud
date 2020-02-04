@@ -15,7 +15,7 @@ end
 
 // declaration 
 declare window CCWindow 
-	CreditCardTransaction () over window:time( 15m )
+	CreditCardTransaction () over window:time( 60m )
 end
 // rules
 
