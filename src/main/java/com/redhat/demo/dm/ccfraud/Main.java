@@ -7,9 +7,15 @@ import io.vertx.core.Vertx;
 import io.vertx.kafka.client.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.drools.core.impl.KnowledgeBaseFactory;
+import org.kie.api.KieBase;
+import org.kie.api.KieBaseConfiguration;
 import org.kie.api.KieServices;
+import org.kie.api.conf.EventProcessingOption;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.KieSessionConfiguration;
+import org.kie.api.runtime.conf.ClockTypeOption;
 import org.kie.api.runtime.rule.EntryPoint;
 import org.kie.api.runtime.rule.FactHandle;
 import org.kie.api.time.SessionClock;
@@ -82,7 +88,7 @@ public class Main {
         consumer.handler(record -> {
             System.out.println(new Gson().fromJson(record.value(), CreditCardTransaction.class));
             CreditCardTransaction creditCardTransaction = new Gson().fromJson(record.value(), CreditCardTransaction.class);
-            processTransaction(creditCardTransaction);
+            processTransactionCEP(creditCardTransaction);
 
 
         });
@@ -94,6 +100,46 @@ public class Main {
 
 
         }
+    
+    private static void processTransactionCEP(CreditCardTransaction ccTransaction) {
+    	KieServices kieServices = KieServices.Factory.get();
+    	KieBaseConfiguration kbconf = kieServices.
+				newKieBaseConfiguration();
+				kbconf.setOption(EventProcessingOption.STREAM);
+				
+				
+				
+		// Initializing KieSession.
+		LOGGER.info("Creating KieSession.");
+		KieSessionConfiguration conf = KieServices.Factory.get().newKieSessionConfiguration();
+		conf.setOption(ClockTypeOption.get("pseudo"));
+
+		//KieSession kieSession = kbase.newKieSession(conf, null);
+		  KieSession kieSession = kieContainer.newKieSession("ccfd-session", conf);
+		SessionPseudoClock clock = kieSession.getSessionClock();
+		try {
+			kieSession.insert(ccTransaction);
+			System.out.println("Firing rules...");
+			kieSession.fireAllRules();
+			Collection<?> fraudResponse = kieSession.getObjects();
+
+	        for(Object object: fraudResponse) {
+	            String jsonString = new Gson().toJson(object);
+	            PotentialFraudFact potentialFraudFact = new Gson().fromJson(jsonString,PotentialFraudFact.class);
+	            System.out.print("PotentialFraudFact"+potentialFraudFact);
+
+	            Main.invokeCase(potentialFraudFact);
+	        }
+		} finally {
+			System.out.println("Disposing session.");
+			kieSession.dispose();
+			
+			
+			
+			
+		}
+    }
+
 
         private static void invokeCase(PotentialFraudFact potentialFraudFact) {
         System.out.print("Business central for invokeCase................");
