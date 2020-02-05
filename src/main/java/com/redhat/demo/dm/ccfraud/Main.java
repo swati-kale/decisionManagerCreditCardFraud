@@ -129,13 +129,15 @@ public class Main {
 			Collection<?> fraudResponse = kieSession.getObjects();
 
 	        for(Object object: fraudResponse) {
+	        	if(object instanceof PotentialFraudFact) {
 	            String jsonString = new Gson().toJson(object);
 	            PotentialFraudFact potentialFraudFact = new Gson().fromJson(jsonString,PotentialFraudFact.class);
 	            System.out.print("PotentialFraudFact"+potentialFraudFact);
 
 	            Main.invokeCase(potentialFraudFact);
+	        	}
 	        }
-		} finally {
+		}  finally {
 			System.out.println("Disposing session.");
 			kieSession.dispose();
 			
