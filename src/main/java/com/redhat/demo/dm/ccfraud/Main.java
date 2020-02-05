@@ -86,8 +86,11 @@ public class Main {
         });
 
         consumer.handler(record -> {
+		 System.out.println("In the handler::::::");
+		 System.out.println("In the handler:Record:::::"+record.value());
             System.out.println(new Gson().fromJson(record.value(), CreditCardTransaction.class));
             CreditCardTransaction creditCardTransaction = new Gson().fromJson(record.value(), CreditCardTransaction.class);
+		 System.out.println("In the handler befor processTransactionCEP::::::"+creditCardTransaction);
             processTransactionCEP(creditCardTransaction);
 
 
