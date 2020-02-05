@@ -86,28 +86,7 @@ public class Main {
                 System.out.println("Could not subscribe " + ar.cause().getMessage());
             }
         });
-            System.out.println("Before handler::::::");
-        consumer.handler(record -> {
-		 System.out.println("In the handler::::::");
-		 System.out.println("In the handler:Record:::::"+record.value());
-            System.out.println(new Gson().fromJson(record.value(), CreditCardTransaction.class));
-            CreditCardTransaction creditCardTransaction = new Gson().fromJson(record.value(), CreditCardTransaction.class);
-		 System.out.println("In the handler befor processTransactionCEP::::::"+creditCardTransaction);
-            processTransactionCEP(creditCardTransaction);
-
-
-        });
-
-
-
-
-
-
-
-        }
-    
-    private static void processTransactionCEP(CreditCardTransaction ccTransaction) {
-    	KieServices kieServices = KieServices.Factory.get();
+	        KieServices kieServices = KieServices.Factory.get();
     	KieBaseConfiguration kbconf = kieServices.
 				newKieBaseConfiguration();
 				kbconf.setOption(EventProcessingOption.STREAM);
@@ -122,11 +101,34 @@ public class Main {
 		//KieSession kieSession = kbase.newKieSession(conf, null);
 		  KieSession kieSession = kieContainer.newKieSession("ccfd-session", conf);
 		SessionPseudoClock clock = kieSession.getSessionClock();
+            System.out.println("Before handler::::::");
+        consumer.handler(record -> {
+		 
+		 System.out.println("In the handler:Record:::::"+record.value());
+            System.out.println(new Gson().fromJson(record.value(), CreditCardTransaction.class));
+            CreditCardTransaction creditCardTransaction = new Gson().fromJson(record.value(), CreditCardTransaction.class);
+		 System.out.println("In the handler befor processTransactionCEP::::::"+creditCardTransaction);
+          processTransactionCEP(creditCardTransaction,kieSession);
+
+
+        });
+
+
+
+
+
+
+
+        }
+    
+   private static void processTransactionCEP(CreditCardTransaction ccTransaction, KieSession kieSession) {
+
 		try {
 			kieSession.insert(ccTransaction);
 			System.out.println("Firing rules...");
 			kieSession.fireAllRules();
 			Collection<?> fraudResponse = kieSession.getObjects();
+			 System.out.println("fraudResponse"+fraudResponse.size());
 
 	        for(Object object: fraudResponse) {
 	        	if(object instanceof PotentialFraudFact) {
@@ -137,16 +139,15 @@ public class Main {
 	            Main.invokeCase(potentialFraudFact);
 	        	}
 	        }
-		}  finally {
+		} finally {
 			System.out.println("Disposing session.");
-			kieSession.dispose();
+			//kieSession.dispose();
 			
 			
 			
 			
 		}
     }
-
 
         private static void invokeCase(PotentialFraudFact potentialFraudFact) {
         System.out.print("Business central for invokeCase................");
