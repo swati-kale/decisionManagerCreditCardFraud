@@ -60,8 +60,10 @@ public class Main {
 
         // creating the consumer using properties config
         Properties config = new Properties();
-        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka-route-rhpam7-fraud-detection.apps.mw-ocp4.cloud.lab.eng.bos.redhat.com:9092");
-        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        //config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka-route-rhpam7-fraud-detection.apps.mw-ocp4.cloud.lab.eng.bos.redhat.com:9092");
+        //10.128.4.57:9092
+	  config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,"10.128.4.57:9092");  
+	    config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.GROUP_ID_CONFIG, "test");
 
@@ -84,7 +86,7 @@ public class Main {
                 System.out.println("Could not subscribe " + ar.cause().getMessage());
             }
         });
-
+            System.out.println("Before handler::::::");
         consumer.handler(record -> {
 		 System.out.println("In the handler::::::");
 		 System.out.println("In the handler:Record:::::"+record.value());
